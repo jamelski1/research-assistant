@@ -49,31 +49,71 @@
                 <p class="text-sm text-gray-500">Conference submission</p>
             </div>
         </div>
-
+<!-- Gap-Filling Agent Panel -->
+<div class="mt-8 bg-white rounded-lg shadow p-6" style="margin-bottom:30px;">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">🤖 Research Gap Agent</h2>
+        <div class="flex items-center space-x-2">
+            <span id="agentStatus" class="text-sm px-2 py-1 rounded bg-gray-100 text-gray-600">Idle</span>
+        </div>
+    </div>
+    
+    <!-- Controls -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" style="margin-bottom: 30px;">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Check Interval (minutes)</label>
+            <input type="number" id="checkInterval" value="60" min="5" max="1440" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md">
+        </div>
+        <div class="flex items-end">
+            <button id="startAgent" onclick="startGapAgent()" 
+                    class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
+                ▶️ Start Agent
+            </button>
+        </div>
+        <div class="flex items-end">
+            <button id="stopAgent" onclick="stopGapAgent()" disabled
+                    class="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 disabled:bg-gray-300">
+                ⏹️ Stop Agent
+            </button>
+        </div>
+    </div>
+    
+    <div class="mb-4">
+        <button onclick="findGapsNow()" 
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            🔍 Find Papers Now
+        </button>
+    </div>
+    
+    <!-- Agent Activity Log -->
+    <div class="border-t pt-4">
+        <h3 class="font-semibold mb-2">Agent Activity Log</h3>
+        <div id="agentLog" class="space-y-2 max-h-64 overflow-y-auto text-sm">
+            <p class="text-gray-500">Agent not started yet.</p>
+        </div>
+    </div>
+</div>
         <!-- Main Content Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" style="margin-bottom:30px;">
             <!-- Recent Papers -->
-            <div class="lg:col-span-2 bg-white rounded-lg shadow p-6">
-                <h2 class="text-xl font-semibold mb-4">Recent Papers</h2>
-                <div class="space-y-4">
-                    <div class="border-l-4 border-blue-500 pl-4">
-                        <h4 class="font-semibold">Detecting LLM Hallucinations in Production</h4>
-                        <p class="text-sm text-gray-600">Status: In Progress • Theme: LLM Hallucinations</p>
-                        <p class="text-sm text-gray-500 mt-1">Last updated: 2 hours ago</p>
-                    </div>
-                    
-                    <div class="border-l-4 border-green-500 pl-4">
-                        <h4 class="font-semibold">AI-Assisted Code Review Workflows</h4>
-                        <p class="text-sm text-gray-600">Status: Review • Theme: Developer Workflows</p>
-                        <p class="text-sm text-gray-500 mt-1">Last updated: 1 day ago</p>
-                    </div>
-                    
-                    <div class="border-l-4 border-yellow-500 pl-4">
-                        <h4 class="font-semibold">Quality Metrics for AI-Generated Code</h4>
-                        <p class="text-sm text-gray-600">Status: Draft • Theme: QA</p>
-                        <p class="text-sm text-gray-500 mt-1">Last updated: 3 days ago</p>
-                    </div>
-                </div>
+<div class="lg:col-span-2 bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Recent Papers</h2>
+    <div class="space-y-4">
+        {% for paper in papers %}
+        <div class="border-l-4 border-blue-500 pl-4">
+            <h4 class="font-semibold">{{ paper.title }}</h4>
+            <p class="text-sm text-gray-600">Status: {{ paper.status }} • Theme: {{ paper.theme }}</p>
+            <p class="text-sm text-gray-500 mt-1">Last updated: {{ paper.last_updated }}</p>
+            <p class="text-sm text-gray-700 mt-2">{{ paper.summary }}</p>
+            <a href="{{ paper.pdf_link }}" target="_blank" class="text-blue-500 text-sm">📄 View PDF</a>
+        </div>
+        {% else %}
+        <p class="text-gray-500">No papers found.</p>
+        {% endfor %}
+    </div>
+</div>
+
                 
                 <a href="#" class="mt-4 inline-block text-blue-600 hover:text-blue-800">View all papers →</a>
             </div>
@@ -150,6 +190,139 @@
         </div>
     </div>
 
+<!-- Add this script section before the closing </body> tag -->
+<script>
+let agentInterval = null;
+let agentRunning = false;
+
+function updateAgentStatus(status, color = 'gray') {
+    const statusEl = document.getElementById('agentStatus');
+    statusEl.textContent = status;
+    statusEl.className = `text-sm px-2 py-1 rounded bg-${color}-100 text-${color}-600`;
+}
+
+function addAgentLog(message) {
+    const logEl = document.getElementById('agentLog');
+    const timestamp = new Date().toLocaleTimeString();
+    const entry = document.createElement('div');
+    entry.className = 'flex items-start space-x-2';
+    entry.innerHTML = `
+        <span class="text-gray-400">[${timestamp}]</span>
+        <span>${message}</span>
+    `;
+    
+    // Add to top of log
+    if (logEl.children.length === 1 && logEl.children[0].textContent.includes('not started')) {
+        logEl.innerHTML = '';
+    }
+    logEl.insertBefore(entry, logEl.firstChild);
+    
+    // Keep only last 50 entries
+    while (logEl.children.length > 50) {
+        logEl.removeChild(logEl.lastChild);
+    }
+}
+
+async function findGapsNow() {
+    updateAgentStatus('Searching...', 'blue');
+    addAgentLog('🔍 Starting gap analysis for all papers...');
+
+    try {
+        const response = await fetch('/api/analyze-all-gaps', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            addAgentLog(`✅ Analyzed ${result.papers_analyzed} papers, added ${result.papers_added} new papers`);
+
+            result.findings.forEach(finding => {
+                if (finding.paper_added) {
+                    addAgentLog(`📄 <strong>${finding.title}</strong>: Added "${finding.paper_added}" to read`);
+                } else {
+                    addAgentLog(`📄 <strong>${finding.title}</strong>: ${finding.summary}`);
+                }
+            });
+
+            if (result.papers_added > 0) {
+                addAgentLog(`🎉 Check your Notion for ${result.papers_added} new paper(s) marked "To Read"`);
+
+                // AJAX request to get the latest paper card and inject it into dashboard
+                const injectResponse = await fetch('/fetch-new-paper', { method: 'POST' });
+                const injectResult = await injectResponse.json();
+
+                if (injectResult.html) {
+                    const container = document.getElementById("paper-container");
+                    container.insertAdjacentHTML('afterbegin', injectResult.html);
+                }
+            }
+
+            updateAgentStatus('Complete', 'green');
+        } else {
+            addAgentLog('❌ Error: ' + result.error);
+            updateAgentStatus('Error', 'red');
+        }
+    } catch (error) {
+        addAgentLog('❌ Failed to analyze gaps: ' + error.message);
+        updateAgentStatus('Error', 'red');
+    }
+}
+
+function startGapAgent() {
+    const interval = parseInt(document.getElementById('checkInterval').value);
+    
+    if (interval < 5) {
+        alert('Minimum interval is 5 minutes');
+        return;
+    }
+    
+    agentRunning = true;
+    document.getElementById('startAgent').disabled = true;
+    document.getElementById('stopAgent').disabled = false;
+    document.getElementById('checkInterval').disabled = true;
+    
+    updateAgentStatus('Running', 'green');
+    addAgentLog(`🚀 Agent started - checking every ${interval} minutes`);
+    
+    // Run immediately
+    findGapsNow();
+    
+    // Set interval (convert minutes to milliseconds)
+    agentInterval = setInterval(() => {
+        if (agentRunning) {
+            addAgentLog(`⏰ Running scheduled gap analysis...`);
+            findGapsNow();
+        }
+    }, interval * 60 * 1000);
+}
+
+function stopGapAgent() {
+    agentRunning = false;
+    
+    if (agentInterval) {
+        clearInterval(agentInterval);
+        agentInterval = null;
+    }
+    
+    document.getElementById('startAgent').disabled = false;
+    document.getElementById('stopAgent').disabled = true;
+    document.getElementById('checkInterval').disabled = false;
+    
+    updateAgentStatus('Stopped', 'red');
+    addAgentLog('⏹️ Agent stopped');
+}
+
+// Check if agent should be running on page load
+window.addEventListener('load', () => {
+    // You could store agent state in localStorage or check with backend
+    const savedInterval = localStorage.getItem('agentInterval');
+    if (savedInterval) {
+        document.getElementById('checkInterval').value = savedInterval;
+    }
+});
+</script>
     <script>
         // Initialize progress chart with proper configuration
         const ctx = document.getElementById('progressChart').getContext('2d');
@@ -241,6 +414,25 @@
             
             resultsDiv.innerHTML = html || '<p class="text-gray-500">No results found.</p>';
         }
+
+document.getElementById("fetch-paper-btn").addEventListener("click", function () {
+    fetch("/fetch-new-paper", {
+        method: "POST"
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.html) {
+            const container = document.getElementById("paper-container");
+            container.insertAdjacentHTML('afterbegin', data.html);
+        } else {
+            alert(data.message || "No new paper found.");
+        }
+    })
+    .catch(error => {
+        console.error("Error fetching new paper:", error);
+        alert("Something went wrong.");
+    });
+});
     </script>
 </body>
 </html>

@@ -1,0 +1,5 @@
+<div class="paper-card">
+    <h3>{{ paper.title }} {% if is_new %}🆕{% endif %}</h3>
+    <p>{{ paper.summary or 'No summary available.' }}</p>
+    <a href="{{ paper.link or '#' }}" target="_blank">Read more</a>
+</div>
