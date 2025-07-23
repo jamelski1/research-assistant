@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  assistant:
+    build: .
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./config/api_keys.env
+    environment:
+      - FLASK_ENV=development
+      - PYTHONPATH=/app/src
+    volumes:
+      - ./data:/ResearchAssistant/data
+      - ./config:/ResearchAssistant/config
+      - ./src:/ResearchAssistant/src
+      - ./web:/ResearchAssistant/web
+    restart: unless-stopped

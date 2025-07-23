@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: research-assistant
+    env: docker
+    plan: free
+    region: oregon
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: NOTION_API_KEY
+        value: YOUR_NOTION_API_KEY
+      - key: NOTION_DATABASE_ID
+        value: YOUR_NOTION_DB_ID
+      - key: DISCORD_WEBHOOK_URL
+        value: YOUR_DISCORD_WEBHOOK
+      - key: ANTHROPIC_API_KEY
+        value: YOUR_CLAUDE_API_KEY

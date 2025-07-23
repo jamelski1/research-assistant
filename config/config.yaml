@@ -1,0 +1,56 @@
+# Research Assistant Configuration
+app:
+  name: "PhD Research Assistant"
+  version: "1.0.0"
+  debug: false
+
+# Update Schedule
+notifications:
+  discord:
+    enabled: true
+    frequency_hours: 48  # Adjustable update frequency
+    webhook_url: "${DISCORD_WEBHOOK_URL}"
+    
+# Notion Settings
+notion:
+  api_key: "${NOTION_API_KEY}"
+  database_id: "${NOTION_DATABASE_ID}"
+  
+# Claude API
+claude:
+  api_key: "${ANTHROPIC_API_KEY}"
+  model: "claude-3-opus-20240229"
+  max_tokens: 4000
+  
+# Academic Databases
+databases:
+  ieee:
+    enabled: false
+    api_key: "${IEEE_API_KEY}"
+    base_url: "https://ieeexploreapi.ieee.org/api/v1"
+  
+  elsevier:
+    enabled: false
+    api_key: "${ELSEVIER_API_KEY}"
+    scopus_url: "https://api.elsevier.com/content/search/scopus"
+    sciencedirect_url: "https://api.elsevier.com/content/search/sciencedirect"
+  
+  semantic_scholar:
+    enabled: true
+    api_key: "${SEMANTIC_SCHOLAR_API_KEY}"
+    base_url: "https://api.semanticscholar.org/graph/v1"
+  
+  arxiv:
+    enabled: true
+    base_url: "http://export.arxiv.org/api"
+  
+  crossref:
+    enabled: true
+    base_url: "https://api.crossref.org"
+    
+# UMBC Proxy
+ezproxy:
+  enabled: true
+  base_url: "https://proxy-um.researchport.umd.edu"
+  username: "${UMBC_USERNAME}"
+  password: "${UMBC_PASSWORD}"

@@ -1,0 +1,35 @@
+# Environment files
+config/api_keys.env
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+venv/
+env/
+.Python
+
+# Data files
+data/uploads/*
+data/cache/*
+data/logs/*
+!data/uploads/.gitkeep
+!data/cache/.gitkeep
+!data/logs/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.log

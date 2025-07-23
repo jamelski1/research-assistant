@@ -1,0 +1,37 @@
+# Core web framework
+flask==2.3.2
+flask-cors==4.0.0
+
+# AI and NLP
+anthropic==0.25.0
+langchain==0.1.16
+langchain-community==0.0.34
+
+# Document processing
+pypdf2==3.0.1
+pdfplumber==0.10.3
+
+# Notion integration
+notion-client==2.2.0
+
+# Async and networking
+aiohttp==3.9.3
+requests==2.31.0
+
+# Task scheduling
+apscheduler==3.10.4
+
+# Web scraping (for EZProxy)
+playwright==1.42.0
+beautifulsoup4==4.12.3
+
+# Configuration
+pyyaml==6.0.1
+python-dotenv==1.0.1
+
+# Data processing
+pandas==2.2.1
+numpy==1.26.4
+
+# Logging and monitoring
+colorlog==6.8.2

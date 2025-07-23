@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PhD Research Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Fix for Chart.js container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Research Dashboard</h1>
+            <p class="text-gray-600">Track your PhD research progress</p>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-sm font-medium text-gray-500">Total Papers</h3>
+                <p class="text-2xl font-bold text-gray-800">12</p>
+                <p class="text-sm text-green-600">+2 this week</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-sm font-medium text-gray-500">In Progress</h3>
+                <p class="text-2xl font-bold text-blue-600">3</p>
+                <p class="text-sm text-gray-500">Active drafts</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-sm font-medium text-gray-500">Submitted</h3>
+                <p class="text-2xl font-bold text-green-600">2</p>
+                <p class="text-sm text-gray-500">Under review</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-sm font-medium text-gray-500">Next Deadline</h3>
+                <p class="text-2xl font-bold text-orange-600">15 days</p>
+                <p class="text-sm text-gray-500">Conference submission</p>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Recent Papers -->
+            <div class="lg:col-span-2 bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Recent Papers</h2>
+                <div class="space-y-4">
+                    <div class="border-l-4 border-blue-500 pl-4">
+                        <h4 class="font-semibold">Detecting LLM Hallucinations in Production</h4>
+                        <p class="text-sm text-gray-600">Status: In Progress • Theme: LLM Hallucinations</p>
+                        <p class="text-sm text-gray-500 mt-1">Last updated: 2 hours ago</p>
+                    </div>
+                    
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <h4 class="font-semibold">AI-Assisted Code Review Workflows</h4>
+                        <p class="text-sm text-gray-600">Status: Review • Theme: Developer Workflows</p>
+                        <p class="text-sm text-gray-500 mt-1">Last updated: 1 day ago</p>
+                    </div>
+                    
+                    <div class="border-l-4 border-yellow-500 pl-4">
+                        <h4 class="font-semibold">Quality Metrics for AI-Generated Code</h4>
+                        <p class="text-sm text-gray-600">Status: Draft • Theme: QA</p>
+                        <p class="text-sm text-gray-500 mt-1">Last updated: 3 days ago</p>
+                    </div>
+                </div>
+                
+                <a href="#" class="mt-4 inline-block text-blue-600 hover:text-blue-800">View all papers →</a>
+            </div>
+
+            <!-- Quick Actions & Updates -->
+            <div class="space-y-6">
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-xl font-semibold mb-4">Quick Actions</h2>
+                    <div class="space-y-3">
+                        <a href="/upload" class="block w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600">
+                            Upload New Paper
+                        </a>
+                        <button onclick="searchLiterature()" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
+                            Search Literature
+                        </button>
+                        <a href="/settings" class="block w-full bg-gray-500 text-white text-center py-2 rounded hover:bg-gray-600">
+                            Settings
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Recent Updates -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start">
+                            <span class="text-green-500 mr-2">•</span>
+                            <div>
+                                <p class="text-gray-700">New literature found on hallucination detection</p>
+                                <p class="text-gray-500">10 minutes ago</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-blue-500 mr-2">•</span>
+                            <div>
+                                <p class="text-gray-700">Discord update sent</p>
+                                <p class="text-gray-500">2 hours ago</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-yellow-500 mr-2">•</span>
+                            <div>
+                                <p class="text-gray-700">Paper analysis completed</p>
+                                <p class="text-gray-500">5 hours ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Chart - FIXED -->
+        <div class="mt-8 bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Research Progress</h2>
+            <!-- Fixed chart container with set height -->
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="searchModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-2xl">
+            <h3 class="text-xl font-semibold mb-4">Search Academic Literature</h3>
+            <input type="text" id="searchQuery" placeholder="Enter search terms..." 
+                   class="w-full p-2 border rounded mb-4">
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeSearch()" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+                <button onclick="performSearch()" class="px-4 py-2 bg-blue-500 text-white rounded">Search</button>
+            </div>
+            <div id="searchResults" class="mt-4 max-h-96 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize progress chart with proper configuration
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        const progressChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Papers Completed',
+                    data: [1, 2, 2, 4, 5, 7],
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.1
+                }, {
+                    label: 'Papers Started',
+                    data: [2, 3, 5, 6, 8, 10],
+                    borderColor: 'rgb(34, 197, 94)',
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Search functions
+        function searchLiterature() {
+            document.getElementById('searchModal').classList.remove('hidden');
+        }
+        
+        function closeSearch() {
+            document.getElementById('searchModal').classList.add('hidden');
+        }
+        
+        async function performSearch() {
+            const query = document.getElementById('searchQuery').value;
+            const resultsDiv = document.getElementById('searchResults');
+            resultsDiv.innerHTML = '<p class="text-gray-500">Searching...</p>';
+            
+            try {
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({query: query})
+                });
+                
+                const results = await response.json();
+                displaySearchResults(results);
+            } catch (error) {
+                resultsDiv.innerHTML = '<p class="text-red-500">Search failed. Please try again.</p>';
+            }
+        }
+        
+        function displaySearchResults(results) {
+            const resultsDiv = document.getElementById('searchResults');
+            let html = '';
+            
+            for (const [source, data] of Object.entries(results)) {
+                if (data.status === 'success' && data.papers.length > 0) {
+                    html += `<div class="mb-4">
+                        <h4 class="font-semibold text-lg mb-2">${source}</h4>
+                        <div class="space-y-2">`;
+                    
+                    data.papers.forEach(paper => {
+                        html += `
+                            <div class="border p-3 rounded hover:bg-gray-50">
+                                <h5 class="font-medium">${paper.title}</h5>
+                                <p class="text-sm text-gray-600">${paper.authors.join(', ')} (${paper.year})</p>
+                                <p class="text-sm mt-1">${paper.abstract.substring(0, 150)}...</p>
+                                <a href="${paper.url}" target="_blank" class="text-blue-500 text-sm">View Paper</a>
+                            </div>`;
+                    });
+                    
+                    html += '</div></div>';
+                }
+            }
+            
+            resultsDiv.innerHTML = html || '<p class="text-gray-500">No results found.</p>';
+        }
+    </script>
+</body>
+</html>
