@@ -134,6 +134,7 @@ def dashboard():
             props = page["properties"]
 
             papers.append({
+                "id": page["id"],  # Add this line to include page ID
                 "title": props["Title"]["title"][0]["text"]["content"] if props["Title"]["title"] else "Untitled",
                 "summary": props["Summary"]["rich_text"][0]["text"]["content"] if props["Summary"]["rich_text"] else "",
                 "theme": props["Theme"]["select"]["name"] if props["Theme"].get("select") else "",
@@ -700,7 +701,37 @@ def fetch_new_paper():
     html = render_template("partials/paper_card.html", paper=result)
     return jsonify({"html": html})
 
-
+@app.route('/api/delete-paper/<page_id>', methods=['DELETE'])
+def delete_paper(page_id):
+    """Delete a paper from Notion database"""
+    
+    if not notion_client:
+        return jsonify({'error': 'Notion not configured'}), 400
+    
+    try:
+        # Archive the page in Notion (soft delete)
+        notion_client.pages.update(
+            page_id=page_id,
+            archived=True
+        )
+        
+        logger.info(f"Deleted paper with ID: {page_id}")
+        
+        # Optionally notify Discord
+        if discord_client:
+            try:
+                discord_client.send_message(f"🗑️ Paper deleted from database")
+            except:
+                pass
+        
+        return jsonify({
+            'success': True,
+            'message': 'Paper deleted successfully'
+        })
+        
+    except Exception as e:
+        logger.error(f"Failed to delete paper {page_id}: {e}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/agent-status', methods=['GET'])
 def get_agent_status():
