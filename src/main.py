@@ -3,13 +3,15 @@ import json
 import logging
 import requests
 import asyncio
+import aiohttp
+import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
 from datetime import datetime
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from werkzeug.utils import secure_filename
-from flask import send_from_directory
-
+from dotenv import load_dotenv
+import anthropic
+load_dotenv('config/api_keys.env')
 
 # Set up logger
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
@@ -32,8 +34,8 @@ services = {
 notion_client = None
 if os.getenv('NOTION_API_KEY') and 'YOUR_' not in os.getenv('NOTION_API_KEY', ''):
     try:
-        from notion_client import Client
-        notion_client = Client(auth=os.getenv('NOTION_API_KEY'))
+        from notion_client import Client as NotionClient
+        notion_client = NotionClient(auth=os.getenv('NOTION_API_KEY'))
         services['notion'] = True
         logger.info("✅ Notion client initialized")
     except Exception as e:
@@ -682,6 +684,7 @@ def analyze_all_gaps():
         logger.error(f"Gap analysis error: {e}")
         return jsonify({'error': str(e)}), 500
 
+"""
 @app.route('/fetch-new-paper', methods=['POST'])
 def fetch_new_paper():
     # This assumes you're pulling the latest paper added to your DB or source
@@ -700,6 +703,7 @@ def fetch_new_paper():
     # Render it to HTML
     html = render_template("partials/paper_card.html", paper=result)
     return jsonify({"html": html})
+"""
 
 @app.route('/api/delete-paper/<page_id>', methods=['DELETE'])
 def delete_paper(page_id):
@@ -742,5 +746,243 @@ def get_agent_status():
         'last_run': None,
         'interval_minutes': 60
     })
+
+
+# Add this to your src/main.py file - insert after the existing routes
+
+@app.route('/slr')
+def slr_dashboard():
+    """Systematic Literature Review Dashboard"""
+    return render_template('slr/dashboard.html')
+
+
+@app.route('/slr/planning', methods=['GET', 'POST'])
+def slr_planning():
+    """SLR Phase 1: Planning the Review"""
+    if request.method == 'POST':
+        try:
+            # Extract form data
+            protocol_data = {
+                'rationale': request.form.get('rationale', ''),
+                'primary_question': request.form.get('primary_question', ''),
+                'secondary_questions': {
+                    'rq1': request.form.get('rq1', ''),
+                    'rq2': request.form.get('rq2', ''),
+                    'rq3': request.form.get('rq3', ''),
+                    'additional_rqs': request.form.getlist('additional_rq')
+                },
+                'picoc': {
+                    'population': request.form.get('population', ''),
+                    'intervention': request.form.get('intervention', ''),
+                    'comparison': request.form.get('comparison', ''),
+                    'outcomes': request.form.get('outcomes', ''),
+                    'context': request.form.get('context', '')
+                },
+                'search_strategy': {
+                    'databases': request.form.getlist('databases'),
+                    'keywords': request.form.get('keywords', ''),
+                    'search_strings': request.form.get('search_strings', ''),
+                    'manual_search': request.form.get('manual_search', '')
+                },
+                'selection_criteria': {
+                    'inclusion': request.form.getlist('inclusion_criteria'),
+                    'exclusion': request.form.getlist('exclusion_criteria')
+                },
+                'quality_assessment': request.form.getlist('quality_checklist'),
+                'data_extraction': request.form.get('data_extraction', ''),
+                'synthesis_plan': request.form.get('synthesis_plan', ''),
+                'timeline': {
+                    'phase1_target': request.form.get('phase1_target', ''),
+                    'phase2a_target': request.form.get('phase2a_target', ''),
+                    'phase2b_target': request.form.get('phase2b_target', ''),
+                    'phase2c_target': request.form.get('phase2c_target', ''),
+                    'phase2d_target': request.form.get('phase2d_target', ''),
+                    'phase3_target': request.form.get('phase3_target', ''),
+                    'final_target': request.form.get('final_target', '')
+                },
+                'publication_plan': {
+                    'citation_style': request.form.get('citation_style', 'APA'),
+                    'target_venues': request.form.getlist('target_venues')
+                },
+                'research_team': {
+                    'primary_researcher': request.form.get('primary_researcher', ''),
+                    'primary_advisor': request.form.get('primary_advisor', ''),
+                    'ai_expert': request.form.get('ai_expert', '')
+                }
+            }
+
+            # Save to Notion if available
+            notion_url = None
+            if notion_client and services['notion']:
+                notion_url = save_slr_protocol_to_notion(protocol_data)
+
+            # Send Discord notification if enabled
+            if discord_client and services['discord']:
+                send_slr_notification(protocol_data, notion_url)
+
+            # Generate Claude suggestions if available
+            suggestions = None
+            if claude_client and services['claude']:
+                suggestions = generate_protocol_suggestions(protocol_data)
+
+            return jsonify({
+                'success': True,
+                'message': 'SLR Protocol saved successfully',
+                'notion_url': notion_url,
+                'suggestions': suggestions
+            })
+
+        except Exception as e:
+            logger.error(f"SLR Protocol save error: {e}")
+            return jsonify({'error': str(e)}), 500
+
+    return render_template('slr/planning.html')
+
+
+@app.route('/slr/conduct')
+def slr_conduct():
+    """SLR Phase 2: Conducting the Review"""
+    return render_template('slr/conduct.html')
+
+
+@app.route('/slr/report')
+def slr_report():
+    """SLR Phase 3: Reporting the Review"""
+    return render_template('slr/report.html')
+
+
+# Helper functions for SLR
+
+def save_slr_protocol_to_notion(protocol_data):
+    """Save SLR protocol to Notion"""
+    try:
+        # Create a summary of the protocol
+        summary = f"""Primary Question: {protocol_data['primary_question']}
+
+Research Context: {protocol_data['rationale'][:200]}...
+
+PICOC Framework:
+- Population: {protocol_data['picoc']['population']}
+- Intervention: {protocol_data['picoc']['intervention']}
+- Comparison: {protocol_data['picoc']['comparison']}
+- Outcomes: {protocol_data['picoc']['outcomes']}
+- Context: {protocol_data['picoc']['context']}
+
+Databases: {', '.join(protocol_data['search_strategy']['databases'])}
+Timeline: Phase 1 target - {protocol_data['timeline']['phase1_target']}"""
+
+        response = notion_client.pages.create(
+            parent={"database_id": os.getenv('NOTION_DATABASE_ID')},
+            properties={
+                "Title": {"title": [{"text": {"content": "SLR Protocol: AI-Assisted Coding Impact Study"}}]},
+                "Theme": {"select": {"name": "SLR Protocol"}},
+                "Status": {"select": {"name": "Planning"}},
+                "Summary": {"rich_text": [{"text": {"content": summary}}]},
+                "Notes": {"rich_text": [
+                    {"text": {"content": f"Protocol created: {datetime.now().strftime('%Y-%m-%d %H:%M')}"}}]},
+                "Key Findings": {"rich_text": [
+                    {"text": {"content": f"Search Strategy: {protocol_data['search_strategy']['keywords']}"}}]},
+                "Research Gaps": {
+                    "rich_text": [{"text": {"content": "Systematic review protocol - comprehensive planning phase"}}]}
+            }
+        )
+
+        return response.get('url')
+
+    except Exception as e:
+        logger.error(f"Failed to save SLR protocol to Notion: {e}")
+        return None
+
+
+def send_slr_notification(protocol_data, notion_url=None):
+    """Send Discord notification about SLR protocol creation"""
+    try:
+        embed = {
+            "title": "📋 SLR Protocol Created",
+            "description": "New Systematic Literature Review protocol has been developed",
+            "color": 9442302,  # Purple
+            "fields": [
+                {
+                    "name": "🎯 Primary Research Question",
+                    "value": protocol_data['primary_question'][:200] + (
+                        '...' if len(protocol_data['primary_question']) > 200 else ''),
+                    "inline": False
+                },
+                {
+                    "name": "🔍 Databases Selected",
+                    "value": ', '.join(protocol_data['search_strategy']['databases']) or 'None specified',
+                    "inline": True
+                },
+                {
+                    "name": "📅 Phase 1 Target",
+                    "value": protocol_data['timeline']['phase1_target'] or 'Not set',
+                    "inline": True
+                },
+                {
+                    "name": "👥 Research Team",
+                    "value": f"Primary: {protocol_data['research_team']['primary_researcher']}\nAdvisor: {protocol_data['research_team']['primary_advisor']}",
+                    "inline": False
+                }
+            ],
+            "footer": {
+                "text": "SLR Protocol Manager"
+            },
+            "timestamp": datetime.now().isoformat()
+        }
+
+        if notion_url:
+            embed["url"] = notion_url
+
+        response = requests.post(
+            discord_client.webhook_url,
+            json={"embeds": [embed]}
+        )
+
+        if response.status_code == 204:
+            logger.info("✅ SLR Discord notification sent")
+
+    except Exception as e:
+        logger.error(f"SLR Discord notification error: {e}")
+
+
+def generate_protocol_suggestions(protocol_data):
+    """Generate Claude suggestions for improving the protocol"""
+    try:
+        prompt = f"""As an expert in systematic literature reviews, analyze this SLR protocol and provide specific suggestions for improvement:
+
+Primary Research Question: {protocol_data['primary_question']}
+
+PICOC Framework:
+- Population: {protocol_data['picoc']['population']}
+- Intervention: {protocol_data['picoc']['intervention']}
+- Comparison: {protocol_data['picoc']['comparison']}
+- Outcomes: {protocol_data['picoc']['outcomes']}
+- Context: {protocol_data['picoc']['context']}
+
+Search Strategy: {protocol_data['search_strategy']['keywords']}
+Databases: {', '.join(protocol_data['search_strategy']['databases'])}
+
+Provide 3-5 specific, actionable suggestions to improve this protocol, focusing on:
+1. Research question clarity and specificity
+2. Search strategy completeness
+3. Selection criteria rigor
+4. Timeline feasibility
+5. Methodological soundness"""
+
+        response = claude_client.messages.create(
+            model="claude-3-opus-20240229",
+            max_tokens=1000,
+            temperature=0.7,
+            messages=[{"role": "user", "content": [{"type": "text", "text": prompt}]}]
+        )
+
+        return response.content[0].text
+
+    except Exception as e:
+        logger.error(f"Claude protocol suggestions failed: {e}")
+        return None
+
+
+# [Add all helper functions for SLR]
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
