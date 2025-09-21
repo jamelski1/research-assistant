@@ -21,7 +21,6 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__,
             template_folder='../web/templates',
             static_folder='../web/static')
-app.config['UPLOAD_FOLDER'] = '../data/cache'
 
 # Track which services initialize successfully
 services = {
@@ -29,6 +28,15 @@ services = {
     'discord': False,
     'claude': False
 }
+
+# Get the absolute path to the upload folder
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, 'data', 'cache')
+
+# Ensure the directory exists
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Initialize Notion
 notion_client = None
