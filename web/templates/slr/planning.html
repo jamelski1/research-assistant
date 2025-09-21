@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLR Planning - PhD Research Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .section-card {
+            transition: all 0.3s ease;
+        }
+        .section-card:hover {
+            transform: translateY(-2px);
+        }
+        .form-section {
+            scroll-margin-top: 120px;
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Fixed Header with Progress -->
+    <div class="fixed top-0 left-0 right-0 bg-white shadow-sm z-40 border-b">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <a href="/slr" class="text-blue-600 hover:text-blue-800">← SLR Dashboard</a>
+                    <h1 class="text-lg font-semibold">Phase 1: Planning the Review</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-gray-600">Progress</div>
+                    <div class="w-32 bg-gray-200 rounded-full h-2">
+                        <div id="progressBar" class="progress-bar bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <span id="progressText" class="text-sm text-gray-600">0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 mt-20">
+        <!-- Navigation -->
+        <div class="sticky top-20 z-30 bg-white rounded-lg shadow-sm p-4 mb-8">
+            <nav class="flex flex-wrap gap-2 text-sm">
+                <a href="#rationale" class="nav-link px-3 py-1 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200">1. Rationale</a>
+                <a href="#questions" class="nav-link px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">2. Research Questions</a>
+                <a href="#picoc" class="nav-link px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">3. PICOC Framework</a>
+                <a href="#search" class="nav-link px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">4. Search Strategy</a>
+                <a href="#criteria" class="nav-link px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">5. Selection Criteria</a>
+                <a href="#quality" class="nav-link px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">6. Quality Assessment</a>
+                <a href="#timeline" class="nav-link px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">7. Timeline</a>
+                <a href="#team" class="nav-link px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">8. Team & Publication</a>
+            </nav>
+        </div>
+
+        <form id="slrProtocolForm" method="POST" class="space-y-8">
+            <!-- Section 1: Rationale -->
+            <section id="rationale" class="form-section section-card bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">1. Identification of Need for Review</h2>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Rationale Statement</label>
+                    <textarea name="rationale" rows="6" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                              placeholder="Explain why this systematic review is needed. What gap exists in current knowledge? Why is this topic timely and important?"></textarea>
+                    <p class="text-sm text-gray-500 mt-1">Tip: Reference your brainstorm document and justify the clear need for research on AI-assisted coding and quality assurance.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Preliminary Search Completed</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="prelim_search" value="completed" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Conducted initial search to confirm no recent comprehensive reviews exist</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="prelim_volume" value="assessed" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Assessed volume of available literature</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Estimated Number of Studies</label>
+                        <input type="number" name="estimated_studies" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 150">
+                        
+                        <label class="block text-sm font-medium text-gray-700 mb-2 mt-4">Initial Search Date</label>
+                        <input type="date" name="prelim_search_date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Research Questions -->
+            <section id="questions" class="form-section section-card bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">2. Research Questions Development</h2>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Primary Research Question</label>
+                    <textarea name="primary_question" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                              placeholder="How does the use of AI-assisted coding affect software quality assurance and the ability to create legally compliant systems?"></textarea>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Secondary Research Questions</h3>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">RQ1: AI Hallucinations Impact</label>
+                        <textarea name="rq1" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                                  placeholder="What are the documented impacts (positive and negative) of AI hallucinations on software quality assurance processes?"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">RQ2: Legal Compliance Methods</label>
+                        <textarea name="rq2" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                                  placeholder="What methods are proposed in the literature for ensuring legal compliance (e.g., with the AI Act) when using AI-generated code?"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">RQ3: Developer Practices Influence</label>
+                        <textarea name="rq3" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                                  placeholder="How do developers' practices (e.g., training models, querying existing models) with AI tools influence QA outcomes?"></textarea>
+                    </div>
+                    
+                    <div id="additionalQuestions">
+                        <!-- Additional questions will be added here -->
+                    </div>
+                    
+                    <button type="button" onclick="addAdditionalQuestion()" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        + Add Additional Research Question
+                    </button>
+                </div>
+            </section>
+
+            <!-- Section 3: PICOC Framework -->
+            <section id="picoc" class="form-section section-card bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">3. PICOC Framework Application</h2>
+                <p class="text-gray-600 mb-6">The PICOC framework helps refine your research questions by clearly defining each component.</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Population</label>
+                        <textarea name="population" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                                  placeholder="e.g., software developers, development teams, specific industry sectors"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">Who is the target population being studied?</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Intervention</label>
+                        <textarea name="intervention" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                                  placeholder="e.g., specific AI-assisted coding tools, LLMs, custom-trained models"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">What AI technologies are being studied?</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Comparison</label>
+                        <textarea name="comparison" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                                  placeholder="e.g., traditional development without AI, different AI approaches"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">What is the baseline or alternative approach?</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Outcomes</label>
+                        <textarea name="outcomes" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                                  placeholder="e.g., defect rates, security vulnerabilities, compliance metrics, development efficiency"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">What measurable impacts are you looking for?</p>
+                    </div>
+                    
+                    <div class="lg:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Context</label>
+                        <textarea name="context" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                                  placeholder="e.g., academic vs. industrial settings, student vs. professional developers"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">What are the study environments and settings?</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Search Strategy -->
+            <section id="search" class="form-section section-card bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">4. Search Strategy</h2>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Databases to Search</label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="databases" value="IEEE Xplore" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">IEEE Xplore</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="databases" value="ACM Digital Library" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">ACM Digital Library</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="databases" value="Google Scholar" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Google Scholar</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="databases" value="ScienceDirect" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">ScienceDirect</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="databases" value="Web of Science" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Web of Science</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="databases" value="Scopus" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Scopus</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Search Keywords</label>
+                    <textarea name="keywords" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                              placeholder='Enter keywords separated by themes:
+AI-related: "artificial intelligence", "machine learning", "large language model", "LLM"
+Development: "software development", "code generation", "programming assistance"
+Quality: "software quality", "quality assurance", "QA", "defect detection"
+Legal: "legal compliance", "AI Act", "regulatory compliance"'></textarea>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Search String Development</label>
+                    <textarea name="search_strings" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                              placeholder="Document your Boolean search combinations here. E.g., ('AI' OR 'artificial intelligence') AND ('code quality' OR 'software quality') AND ('hallucination' OR 'error')"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Manual Search Plan</label>
+                    <textarea name="manual_search" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                              placeholder="List key journals to hand-search, conference proceedings to review, and reference list mining strategy"></textarea>
+                </div>
+            </section>
+
+            <!-- Section 5: Selection Criteria -->
+            <section id="criteria" class="form-section section-card bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">5. Study Selection Criteria</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Inclusion Criteria</h3>
+                        <div id="inclusionCriteria" class="space-y-2">
+                            <div class="flex items-center">
+                                <input type="checkbox" name="inclusion_criteria" value="ai_tools_impact" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Studies evaluating AI tools' impact on software quality</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="inclusion_criteria" value="legal_compliance" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Papers discussing legal compliance for AI-generated code</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="inclusion_criteria" value="hallucinations" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Research examining AI hallucinations in coding contexts</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="inclusion_criteria" value="empirical_evidence" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Studies with empirical evidence (experimental, case study, survey)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="inclusion_criteria" value="recent_publications" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Publications from 2020 to present</span>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addCustomCriteria('inclusion')" class="mt-3 text-sm text-blue-600 hover:text-blue-800">+ Add custom inclusion criteria</button>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Exclusion Criteria</h3>
+                        <div id="exclusionCriteria" class="space-y-2">
+                            <div class="flex items-center">
+                                <input type="checkbox" name="exclusion_criteria" value="not_software_focus" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Studies not focused on software development</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="exclusion_criteria" value="opinion_pieces" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Opinion pieces without empirical evidence</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="exclusion_criteria" value="pre_2020" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Papers published before 2020</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="exclusion_criteria" value="non_peer_reviewed" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Non-peer-reviewed publications</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="exclusion_criteria" value="ai_model_only" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Studies focusing solely on AI model development</span>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addCustomCriteria('exclusion')" class="mt-3 text-sm text-blue-600 hover:text-blue-800">+ Add custom exclusion criteria</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6: Quality Assessment -->
+            <section id="quality" class="form-section section-card bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">6. Study Quality Assessment</h2>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Assessment Approach</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="radio" name="assessment_approach" value="single_with_consultation" class="text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Single researcher assessment with advisor consultation on uncertain cases</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="assessment_approach" value="test_retest" class="text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Test-retest approach on sample of papers for consistency checking</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Quality Assessment Checklist</h3>
+                    <p class="text-gray-600 mb-4">Select relevant criteria from standard checklists:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <label class="flex items-start">
+                            <input type="checkbox" name="quality_checklist" value="aims_clear" class="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Are the study aims clearly stated?</span>
+                        </label>
+                        <label class="flex items-start">
+                            <input type="checkbox" name="quality_checklist" value="sample_representative" class="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Is the sample representative and adequately described?</span>
+                        </label>
+                        <label class="flex items-start">
+                            <input type="checkbox" name="quality_checklist" value="methods_clear" class="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Are the methods clearly described and appropriate?</span>
+                        </label>
+                        <label class="flex items-start">
+                            <input type="checkbox" name="quality_checklist" value="statistics_appropriate" class="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Are statistical methods described and appropriate?</span>
+                        </label>
+                        <label class="flex items-start">
+                            <input type="checkbox" name="quality_checklist" value="results_clear" class="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Are the results clearly presented?</span>
+                        </label>
+                        <label class="flex items-start">
+                            <input type="checkbox" name="quality_checklist" value="limitations_acknowledged" class="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Are limitations acknowledged?</span>
+                        </label>
+                        <label class="flex items-start">
+                            <input type="checkbox" name="quality_checklist" value="conclusions_supported" class="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Are conclusions supported by the results?</span>
+                        </label>
+                        <label class="flex items-start">
+                            <input type="checkbox" name="quality_checklist" value="conflicts_declared" class="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Are potential conflicts of interest declared?</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Data Extraction Strategy</label>
+                    <textarea name="data_extraction" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                              placeholder="Describe what data you will extract: publication details, study design, AI tool(s) examined, population characteristics, QA metrics, legal compliance approaches, key findings, limitations"></textarea>
+                </div>
+
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Data Synthesis Plan</label>
+                    <textarea name="synthesis_plan" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                              placeholder="Describe how you will summarize findings. This will likely be a descriptive/narrative synthesis, tabulating results to identify patterns and themes"></textarea>
+                </div>
+            </section>
+
+            <!-- Section 7: Timeline -->
+            <section id="timeline" class="form-section section-card bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">7. Project Timeline</h2>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phase</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activities</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Target Completion</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Phase 1</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Protocol development and advisor review</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="date" name="phase1_target" class="text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Phase 2a</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Database searching and study identification</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="date" name="phase2a_target" class="text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Phase 2b</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Study selection and quality assessment</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="date" name="phase2b_target" class="text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Phase 2c</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Data extraction</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="date" name="phase2c_target" class="text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Phase 2d</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Data synthesis</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="date" name="phase2d_target" class="text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Phase 3</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Report writing and review</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="date" name="phase3_target" class="text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Final</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Submission preparation</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="date" name="final_target" class="text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Section 8: Team & Publication -->
+            <section id="team" class="form-section section-card bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">8. Research Team & Publication Plan</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Research Team Composition</h3>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Primary Researcher</label>
+                            <input type="text" name="primary_researcher" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Your name and affiliation">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Primary Advisor (Software Development Background)</label>
+                            <input type="text" name="primary_advisor" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Advisor name and specialization">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">AI Subject Matter Expert</label>
+                            <input type="text" name="ai_expert" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="To be identified - target expertise areas">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Publication Plan</h3>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Target Citation Style</label>
+                            <select name="citation_style" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                <option value="APA">APA (current preference)</option>
+                                <option value="IEEE">IEEE</option>
+                                <option value="ACM">ACM</option>
+                                <option value="Journal-specific">Journal-specific (TBD)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Target Publication Venues</label>
+                            <div id="targetVenues" class="space-y-2">
+                                <input type="text" name="target_venues" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Journal or conference name">
+                            </div>
+                            <button type="button" onclick="addTargetVenue()" class="mt-2 text-sm text-blue-600 hover:text-blue-800">+ Add another venue</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Protocol Review and Approval</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="protocol_review" value="self_review" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Self-review completed</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="protocol_review" value="advisor_review" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Primary advisor review and approval</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="protocol_review" value="ai_expert_review" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">AI expert consultation and input</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="protocol_review" value="final_approval" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2 text-sm text-gray-700">Final protocol approved and dated</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Submit Section -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button type="button" onclick="saveDraft()" class="flex-1 bg-gray-500 text-white py-3 rounded-md hover:bg-gray-600 font-semibold">
+                        Save Draft
+                    </button>
+                    <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 font-semibold">
+                        Save Protocol & Get AI Suggestions
+                    </button>
+                </div>
+                <p class="text-sm text-gray-500 mt-2 text-center">Your protocol will be saved to Notion and you'll receive AI-powered suggestions for improvement.</p>
+            </div>
+        </form>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-sm mx-auto text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p class="text-gray-700 font-semibold">Saving Protocol...</p>
+            <p class="text-gray-500 text-sm mt-2">Generating AI suggestions</p>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-lg mx-auto">
+            <div class="text-center mb-6">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                    <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h3 class="mt-4 text-lg font-medium text-gray-900">Protocol Saved Successfully!</h3>
+            </div>
+            
+            <div id="successContent" class="mb-6">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="closeSuccessModal()" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded hover:bg-gray-400">
+                    Continue Editing
+                </button>
+                <a href="/slr" class="flex-1 bg-blue-600 text-white text-center py-2 rounded hover:bg-blue-700">
+                    Return to SLR Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Progress tracking
+        function updateProgress() {
+            const form = document.getElementById('slrProtocolForm');
+            const formData = new FormData(form);
+            const totalFields = 30; // Approximate number of important fields
+            let filledFields = 0;
+            
+            // Count filled required fields
+            ['rationale', 'primary_question', 'population', 'intervention', 'comparison', 'outcomes', 'context', 'keywords'].forEach(field => {
+                if (formData.get(field) && formData.get(field).trim() !== '') {
+                    filledFields++;
+                }
+            });
+            
+            // Count selected checkboxes
+            if (formData.getAll('databases').length > 0) filledFields += 2;
+            if (formData.getAll('inclusion_criteria').length > 0) filledFields += 2;
+            if (formData.getAll('exclusion_criteria').length > 0) filledFields += 2;
+            if (formData.getAll('quality_checklist').length > 0) filledFields += 2;
+            
+            const progress = Math.min(100, Math.round((filledFields / totalFields) * 100));
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = progress + '%';
+            
+            // Update nav active states
+            updateNavigation();
+        }
+
+        // Navigation scroll spy
+        function updateNavigation() {
+            const sections = document.querySelectorAll('.form-section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 150 && rect.bottom >= 150) {
+                    currentSection = section.id;
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('bg-blue-100', 'text-blue-700');
+                link.classList.add('bg-gray-100', 'text-gray-700');
+                
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.remove('bg-gray-100', 'text-gray-700');
+                    link.classList.add('bg-blue-100', 'text-blue-700');
+                }
+            });
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Dynamic form additions
+        let additionalQuestionCount = 0;
+        function addAdditionalQuestion() {
+            additionalQuestionCount++;
+            const container = document.getElementById('additionalQuestions');
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <div class="flex items-start gap-2">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">RQ${3 + additionalQuestionCount}: Additional Research Question</label>
+                        <textarea name="additional_rq" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter additional research question..."></textarea>
+                    </div>
+                    <button type="button" onclick="this.parentElement.parentElement.remove()" class="mt-7 text-red-600 hover:text-red-800">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function addTargetVenue() {
+            const container = document.getElementById('targetVenues');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'target_venues';
+            input.className = 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500';
+            input.placeholder = 'Journal or conference name';
+            container.appendChild(input);
+        }
+
+        function addCustomCriteria(type) {
+            const container = document.getElementById(type + 'Criteria');
+            const div = document.createElement('div');
+            div.className = 'flex items-center';
+            div.innerHTML = `
+                <input type="checkbox" name="${type}_criteria" value="custom_${Date.now()}" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                <input type="text" placeholder="Enter custom criteria..." class="ml-2 flex-1 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
+                       onchange="this.previousElementSibling.value = 'custom_' + this.value">
+            `;
+            container.appendChild(div);
+        }
+
+        // Form submission
+        document.getElementById('slrProtocolForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const loadingModal = document.getElementById('loadingModal');
+            loadingModal.classList.remove('hidden');
+            
+            try {
+                const formData = new FormData(e.target);
+                const response = await fetch('/slr/planning', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccessModal(result);
+                } else {
+                    alert('Error saving protocol: ' + (result.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error saving protocol: ' + error.message);
+            } finally {
+                loadingModal.classList.add('hidden');
+            }
+        });
+
+        function showSuccessModal(result) {
+            const successModal = document.getElementById('successModal');
+            const successContent = document.getElementById('successContent');
+            
+            let html = '<div class="space-y-4">';
+            
+            if (result.notion_url) {
+                html += `<p class="text-sm text-gray-600">✅ Protocol saved to Notion: <a href="${result.notion_url}" target="_blank" class="text-blue-600 hover:text-blue-800">View in Notion</a></p>`;
+            }
+            
+            if (result.suggestions) {
+                html += `
+                    <div>
+                        <h4 class="font-semibold text-gray-800 mb-2">🤖 AI Suggestions for Improvement:</h4>
+                        <div class="bg-gray-50 p-4 rounded-lg text-sm text-gray-700 max-h-40 overflow-y-auto">
+                            ${result.suggestions.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            successContent.innerHTML = html;
+            successModal.classList.remove('hidden');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.add('hidden');
+        }
+
+        function saveDraft() {
+            // Implement draft saving to localStorage
+            const formData = new FormData(document.getElementById('slrProtocolForm'));
+            const draftData = {};
+            for (let [key, value] of formData.entries()) {
+                if (draftData[key]) {
+                    if (Array.isArray(draftData[key])) {
+                        draftData[key].push(value);
+                    } else {
+                        draftData[key] = [draftData[key], value];
+                    }
+                } else {
+                    draftData[key] = value;
+                }
+            }
+            localStorage.setItem('slr_protocol_draft', JSON.stringify(draftData));
+            alert('Draft saved locally!');
+        }
+
+        // Load draft on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const draft = localStorage.getItem('slr_protocol_draft');
+            if (draft) {
+                try {
+                    const draftData = JSON.parse(draft);
+                    Object.entries(draftData).forEach(([key, value]) => {
+                        const elements = document.querySelectorAll(`[name="${key}"]`);
+                        elements.forEach(element => {
+                            if (element.type === 'checkbox' || element.type === 'radio') {
+                                if (Array.isArray(value)) {
+                                    element.checked = value.includes(element.value);
+                                } else {
+                                    element.checked = element.value === value;
+                                }
+                            } else {
+                                element.value = Array.isArray(value) ? value[0] : value;
+                            }
+                        });
+                    });
+                } catch (e) {
+                    console.error('Error loading draft:', e);
+                }
+            }
+            
+            // Set up form change listeners
+            document.getElementById('slrProtocolForm').addEventListener('input', updateProgress);
+            document.getElementById('slrProtocolForm').addEventListener('change', updateProgress);
+            
+            // Initial progress update
+            updateProgress();
+            
+            // Scroll spy
+            window.addEventListener('scroll', updateNavigation);
+        });
+    </script>
+</body>
+</html>

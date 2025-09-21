@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLR Reporting - PhD Research Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-8">
+            <nav class="mb-4">
+                <a href="/slr" class="text-blue-600 hover:text-blue-800">← SLR Dashboard</a>
+            </nav>
+            <h1 class="text-3xl font-bold text-gray-800">Phase 3: Reporting the Review</h1>
+            <p class="text-gray-600">Synthesize findings, create visualizations, and prepare your systematic review manuscript</p>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-700">Phase 3 Progress</span>
+                <span class="text-sm font-medium text-gray-700">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Phase 3 Steps -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Step 3.1: Data Synthesis -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center mr-3">
+                        <span class="text-sm font-semibold">3.1</span>
+                    </div>
+                    <h3 class="text-lg font-semibold">Data Synthesis</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Analyze and synthesize findings from included studies.</p>
+                <button class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
+                    Start Synthesis
+                </button>
+            </div>
+
+            <!-- Step 3.2: PRISMA Diagram -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-8 h-8 bg-gray-400 text-white rounded-full flex items-center justify-center mr-3">
+                        <span class="text-sm font-semibold">3.2</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-600">PRISMA Diagram</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Generate flow diagram showing study selection process.</p>
+                <button disabled class="w-full bg-gray-300 text-gray-500 py-2 rounded cursor-not-allowed">
+                    Complete Synthesis First
+                </button>
+            </div>
+
+            <!-- Step 3.3: Report Writing -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-8 h-8 bg-gray-400 text-white rounded-full flex items-center justify-center mr-3">
+                        <span class="text-sm font-semibold">3.3</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-600">Report Writing</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Structure and write your systematic review manuscript.</p>
+                <button disabled class="w-full bg-gray-300 text-gray-500 py-2 rounded cursor-not-allowed">
+                    Complete PRISMA First
+                </button>
+            </div>
+
+            <!-- Step 3.4: Publication Prep -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-8 h-8 bg-gray-400 text-white rounded-full flex items-center justify-center mr-3">
+                        <span class="text-sm font-semibold">3.4</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-600">Publication Prep</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Format for target journal and prepare submission materials.</p>
+                <button disabled class="w-full bg-gray-300 text-gray-500 py-2 rounded cursor-not-allowed">
+                    Complete Report First
+                </button>
+            </div>
+        </div>
+
+        <!-- Report Structure Template -->
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">📝 Systematic Review Report Structure</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-3">Standard SLR Sections</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <span class="text-green-500 mr-2 mt-1">✓</span>
+                            <div>
+                                <h4 class="font-medium">Abstract/Executive Summary</h4>
+                                <p class="text-sm text-gray-600">Structured summary of objectives, methods, results, and conclusions</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-green-500 mr-2 mt-1">✓</span>
+                            <div>
+                                <h4 class="font-medium">1. Introduction and Background</h4>
+                                <p class="text-sm text-gray-600">Justify the review and state research questions</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-green-500 mr-2 mt-1">✓</span>
+                            <div>
+                                <h4 class="font-medium">2. Methods</h4>
+                                <p class="text-sm text-gray-600">Detail search strategy, selection criteria, quality assessment</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-yellow-500 mr-2 mt-1">○</span>
+                            <div>
+                                <h4 class="font-medium">3. Results</h4>
+                                <p class="text-sm text-gray-600">Present selected studies and synthesized findings</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-yellow-500 mr-2 mt-1">○</span>
+                            <div>
+                                <h4 class="font-medium">4. Discussion</h4>
+                                <p class="text-sm text-gray-600">Analyze findings, strengths, weaknesses, implications</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-yellow-500 mr-2 mt-1">○</span>
+                            <div>
+                                <h4 class="font-medium">5. Conclusion</h4>
+                                <p class="text-sm text-gray-600">Main takeaways and recommendations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-3">AI-Coding Focus Areas</h3>
+                    <div class="space-y-3">
+                        <div class="bg-blue-50 p-3 rounded">
+                            <h4 class="font-medium text-blue-800">RQ1: AI Hallucinations</h4>
+                            <p class="text-sm text-blue-600">Document positive and negative impacts on QA processes</p>
+                        </div>
+                        <div class="bg-green-50 p-3 rounded">
+                            <h4 class="font-medium text-green-800">RQ2: Legal Compliance</h4>
+                            <p class="text-sm text-green-600">Methods for ensuring compliance with AI Act and regulations</p>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded">
+                            <h4 class="font-medium text-purple-800">RQ3: Developer Practices</h4>
+                            <p class="text-sm text-purple-600">How developer workflows influence QA outcomes</p>
+                        </div>
+                        <div class="bg-orange-50 p-3 rounded">
+                            <h4 class="font-medium text-orange-800">Cross-Cutting Themes</h4>
+                            <p class="text-sm text-orange-600">Integration patterns, tool effectiveness, best practices</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coming Soon Features -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-lg font-semibold text-blue-800 mb-2">🚀 Advanced Reporting Features (Coming Soon)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                                <span class="text-sm text-blue-700">AI-powered thematic analysis</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                                <span class="text-sm text-blue-700">Automated PRISMA 2020 flow diagram</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                                <span class="text-sm text-blue-700">Interactive data visualization</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                                <span class="text-sm text-blue-700">Citation network analysis</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                <span class="text-sm text-blue-700">LaTeX/Word export templates</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                <span class="text-sm text-blue-700">Journal-specific formatting</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                <span class="text-sm text-blue-700">Collaborative writing interface</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                <span class="text-sm text-blue-700">Version control for manuscripts</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual Workflow Guide -->
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">📖 Manual Reporting Workflow</h2>
+            <div class="space-y-6">
+                <div class="border-l-4 border-green-500 pl-6">
+                    <h3 class="font-semibold text-gray-800 mb-2">Step 1: Data Synthesis</h3>
+                    <p class="text-gray-600 mb-3">Organize your extracted data into themes based on your research questions:</p>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Create tables comparing study characteristics</li>
+                        <li>• Group findings by research question</li>
+                        <li>• Identify patterns and contradictions</li>
+                        <li>• Note research gaps and limitations</li>
+                    </ul>
+                </div>
+                
+                <div class="border-l-4 border-blue-500 pl-6">
+                    <h3 class="font-semibold text-gray-800 mb-2">Step 2: Create PRISMA Flow Diagram</h3>
+                    <p class="text-gray-600 mb-3">Document your study selection process:</p>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Records identified through database searching</li>
+                        <li>• Records after duplicates removed</li>
+                        <li>• Records screened at title/abstract level</li>
+                        <li>• Full-text articles assessed for eligibility</li>
+                        <li>• Studies included in qualitative synthesis</li>
+                    </ul>
+                </div>
+                
+                <div class="border-l-4 border-purple-500 pl-6">
+                    <h3 class="font-semibold text-gray-800 mb-2">Step 3: Write Results Section</h3>
+                    <p class="text-gray-600 mb-3">Structure your findings systematically:</p>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Study selection results with PRISMA diagram</li>
+                        <li>• Characteristics of included studies</li>
+                        <li>• Quality assessment results</li>
+                        <li>• Findings for each research question</li>
+                    </ul>
+                </div>
+                
+                <div class="border-l-4 border-orange-500 pl-6">
+                    <h3 class="font-semibold text-gray-800 mb-2">Step 4: Discussion and Implications</h3>
+                    <p class="text-gray-600 mb-3">Analyze your findings in context:</p>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Summarize principal findings</li>
+                        <li>• Discuss strengths and limitations</li>
+                        <li>• Explain practical implications for developers and QA</li>
+                        <li>• Identify future research directions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Tools -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-lg shadow p-6 text-center">
+                <h3 class="font-semibold mb-2">📊 PRISMA Template</h3>
+                <p class="text-sm text-gray-600 mb-4">Download PRISMA 2020 flow diagram template</p>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Download Template
+                </button>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6 text-center">
+                <h3 class="font-semibold mb-2">📝 Writing Assistant</h3>
+                <p class="text-sm text-gray-600 mb-4">Get AI suggestions for your manuscript sections</p>
+                <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    Start Writing
+                </button>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6 text-center">
+                <h3 class="font-semibold mb-2">📄 Export Options</h3>
+                <p class="text-sm text-gray-600 mb-4">Export your data and findings in various formats</p>
+                <button class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                    Export Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="mt-8 text-center">
+            <a href="/slr/conduct" class="inline-block bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 mr-4">
+                ← Back to Conducting
+            </a>
+            <a href="/slr" class="inline-block bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+                Return to SLR Dashboard
+            </a>
+        </div>
+    </div>
+</body>
+</html>
