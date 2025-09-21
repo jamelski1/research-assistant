@@ -1,218 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Paper - PhD Research Assistant</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .drop-zone {
-            border: 2px dashed #cbd5e1;
-            transition: all 0.3s ease;
-        }
-        .drop-zone.dragover {
-            border-color: #3b82f6;
-            background-color: #eff6ff;
-        }
-        .loading {
-            display: none;
-        }
-        .loading.active {
-            display: block;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Paper - PhD Research Assistant</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <style>
+    .drop-zone {
+      border: 2px dashed #cbd5e1;
+      transition: all 0.3s ease;
+    }
+    .drop-zone.dragover {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+    }
+    .loading { display: none; }
+    .loading.active { display: block; }
+  </style>
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
-        <header class="mb-8">
-            <a href="/" class="text-blue-600 hover:text-blue-800 mb-4 inline-block">← Back to Dashboard</a>
-            <h1 class="text-3xl font-bold text-gray-800">Upload Research Paper</h1>
-            <p class="text-gray-600 mt-2">Upload a PDF to analyze and add to your research database</p>
-        </header>
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <header class="mb-8">
+      <a href="/" class="text-blue-600 hover:text-blue-800 mb-4 inline-block">← Back to Dashboard</a>
+      <h1 class="text-3xl font-bold text-gray-800">Upload Research Paper</h1>
+      <p class="text-gray-600 mt-2">Upload a PDF or paste a link to analyze and add to your research database</p>
+    </header>
 
-        <!-- Upload Form -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <form id="uploadForm" enctype="multipart/form-data">
-                <!-- Drop Zone -->
-                <div id="dropZone" class="drop-zone rounded-lg p-8 text-center mb-6">
-                    <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                    <p class="text-gray-600 mb-2">Drop your PDF here or click to browse</p>
-                    <input type="file" id="fileInput" name="file" accept=".pdf" class="hidden">
-                    <button type="button" id="browseButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        Choose File
-                    </button>
-                </div>
-
-                <!-- File Info -->
-                <div id="fileInfo" class="hidden mb-6 p-4 bg-gray-50 rounded">
-                    <p class="font-semibold">Selected File:</p>
-                    <p id="fileName" class="text-gray-600"></p>
-                </div>
-
-                <!-- Additional Info -->
-                <div class="space-y-4 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Paper Title (optional)</label>
-                        <input type="text" name="title" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Research Theme</label>
-                        <select name="theme" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">Select a theme...</option>
-                            <option value="AI">AI</option>
-                            <option value="LLM Hallucinations">LLM Hallucinations</option>
-                            <option value="Developer Workflows">Developer Workflows</option>
-                            <option value="QA">Quality Assurance</option>
-                            <option value="General">General</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Notes</label>
-                        <textarea name="notes" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    </div>
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="w-full bg-green-500 text-white py-3 rounded-md hover:bg-green-600 font-semibold">
-                    Upload and Analyze
-                </button>
-            </form>
+    <!-- Upload Form -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+        <!-- Drop Zone -->
+        <div id="dropZone" class="drop-zone rounded-lg p-8 text-center mb-6">
+          <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+          </svg>
+          <p class="text-gray-600 mb-2">Drop your PDF here or click to browse</p>
+          <input type="file" id="fileInput" name="file" accept=".pdf" class="hidden"/>
+          <p class="text-sm text-gray-500 mt-2">You can either upload a PDF or enter an external link below.</p>
+          <button type="button" id="browseButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Choose File
+          </button>
         </div>
 
-        <!-- Loading State -->
-        <div id="loading" class="loading fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-            <div class="bg-white rounded-lg p-8 max-w-sm mx-auto text-center">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                <p class="text-gray-700 font-semibold">Analyzing your paper...</p>
-                <p class="text-gray-500 text-sm mt-2">This may take a moment</p>
-            </div>
+        <!-- External Link -->
+        <label class="block mb-2 font-medium text-gray-700">Optional External Link</label>
+        <input type="url" name="external_link" id="externalLink" placeholder="https://example.com/your-paper"
+          class="w-full p-2 border border-gray-300 rounded mb-4"/>
+
+        <!-- File Info -->
+        <div id="fileInfo" class="hidden mb-6 p-4 bg-gray-50 rounded">
+          <p class="font-semibold">Selected File:</p>
+          <p id="fileName" class="text-gray-600"></p>
         </div>
 
-        <!-- Results -->
-        <div id="results" class="hidden mt-8 bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-2xl font-bold mb-4">Analysis Complete</h2>
-            <div id="analysisContent"></div>
-            <a href="/" class="mt-6 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Return to Dashboard
-            </a>
+        <!-- Additional Info -->
+        <div class="space-y-4 mb-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Paper Title (optional)</label>
+            <input type="text" name="title" class="w-full px-3 py-2 border border-gray-300 rounded-md"/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Research Theme</label>
+            <select name="theme" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+              <option value="">Select a theme...</option>
+              <option value="AI">AI</option>
+              <option value="LLM Hallucinations">LLM Hallucinations</option>
+              <option value="Developer Workflows">Developer Workflows</option>
+              <option value="QA">Quality Assurance</option>
+              <option value="General">General</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Initial Notes</label>
+            <textarea name="notes" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md"></textarea>
+          </div>
         </div>
+
+        <!-- Submit -->
+        <button type="submit" class="w-full bg-green-500 text-white py-3 rounded-md hover:bg-green-600 font-semibold">
+          Upload and Analyze
+        </button>
+      </form>
     </div>
 
-    <script>
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const browseButton = document.getElementById('browseButton');
-        const uploadForm = document.getElementById('uploadForm');
-        const fileInfo = document.getElementById('fileInfo');
-        const fileName = document.getElementById('fileName');
-        const loading = document.getElementById('loading');
-        const results = document.getElementById('results');
-        const analysisContent = document.getElementById('analysisContent');
+    <!-- Loading -->
+    <div id="loading" class="loading fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+      <div class="bg-white rounded-lg p-8 max-w-sm mx-auto text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+        <p class="text-gray-700 font-semibold">Analyzing your paper...</p>
+        <p class="text-gray-500 text-sm mt-2">This may take a moment</p>
+      </div>
+    </div>
 
-        // File selection
-        browseButton.addEventListener('click', () => fileInput.click());
-        
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                showFileInfo(file);
-            }
+    <!-- Results -->
+    <div id="results" class="hidden mt-8 bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-2xl font-bold mb-4">Analysis Complete</h2>
+      <div id="analysisContent"></div>
+      <a href="/" class="mt-6 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        Return to Dashboard
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("fileInput");
+    const browseButton = document.getElementById("browseButton");
+    const fileInfo = document.getElementById("fileInfo");
+    const fileName = document.getElementById("fileName");
+    const uploadForm = document.getElementById("uploadForm");
+    const loading = document.getElementById("loading");
+    const results = document.getElementById("results");
+    const analysisContent = document.getElementById("analysisContent");
+    const linkInput = document.getElementById("externalLink");
+
+    // Show file name
+    function showFileInfo(file) {
+      fileName.textContent = file.name;
+      fileInfo.classList.remove("hidden");
+    }
+
+    // File selection
+    browseButton.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) showFileInfo(file);
+    });
+
+    // Drag & drop
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("dragover");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("dragover");
+    });
+
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("dragover");
+      const file = e.dataTransfer.files[0];
+      if (file && file.type === "application/pdf") {
+        fileInput.files = e.dataTransfer.files;
+        showFileInfo(file);
+      } else {
+        alert("Please upload a PDF file");
+      }
+    });
+
+    // Disable file inputs if link is provided
+    linkInput.addEventListener("input", () => {
+      const hasLink = linkInput.value.trim() !== "";
+      fileInput.disabled = hasLink;
+      browseButton.disabled = hasLink;
+      dropZone.classList.toggle("opacity-50", hasLink);
+      dropZone.classList.toggle("pointer-events-none", hasLink);
+    });
+
+    // Submit
+    uploadForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const hasFile = fileInput.files.length > 0;
+      const hasLink = linkInput.value.trim() !== "";
+
+      if (!hasFile && !hasLink) {
+        alert("Please upload a file or provide an external link.");
+        return;
+      }
+
+      const formData = new FormData(uploadForm);
+      loading.classList.add("active");
+
+      try {
+        const response = await fetch("/upload", {
+          method: "POST",
+          body: formData
         });
+        const result = await response.json();
+        if (result.success) displayResults(result.analysis);
+        else alert("Error: " + (result.error || "Upload failed"));
+      } catch (error) {
+        alert("Error uploading: " + error.message);
+      } finally {
+        loading.classList.remove("active");
+      }
+    });
 
-        // Drag and drop
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
+    function displayResults(analysis) {
+      let html = `<div class="space-y-4">`;
+      if (analysis.title) html += `<div><strong>Title:</strong> ${analysis.title}</div>`;
+      if (analysis.summary) html += `<div><strong>Summary:</strong> ${analysis.summary}</div>`;
+      if (analysis.key_concepts?.length) {
+        html += `<div><strong>Key Concepts:</strong><ul class="list-disc ml-5 mt-2">`;
+        analysis.key_concepts.forEach(concept => html += `<li>${concept}</li>`);
+        html += `</ul></div>`;
+      }
+      if (analysis.research_gaps) html += `<div><strong>Research Gaps:</strong> ${analysis.research_gaps}</div>`;
+      html += `</div>`;
 
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            
-            const file = e.dataTransfer.files[0];
-            if (file && file.type === 'application/pdf') {
-                fileInput.files = e.dataTransfer.files;
-                showFileInfo(file);
-            } else {
-                alert('Please upload a PDF file');
-            }
-        });
-
-        function showFileInfo(file) {
-            fileName.textContent = file.name;
-            fileInfo.classList.remove('hidden');
-        }
-
-        // Form submission
-        uploadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            if (!fileInput.files[0]) {
-                alert('Please select a file');
-                return;
-            }
-
-            const formData = new FormData(uploadForm);
-            
-            loading.classList.add('active');
-            
-            try {
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    displayResults(result.analysis);
-                } else {
-                    alert('Error: ' + (result.error || 'Upload failed'));
-                }
-            } catch (error) {
-                alert('Error uploading file: ' + error.message);
-            } finally {
-                loading.classList.remove('active');
-            }
-        });
-
-        function displayResults(analysis) {
-            let html = '<div class="space-y-4">';
-            
-            if (analysis.title) {
-                html += `<div><strong>Title:</strong> ${analysis.title}</div>`;
-            }
-            
-            if (analysis.summary) {
-                html += `<div><strong>Summary:</strong> ${analysis.summary}</div>`;
-            }
-            
-            if (analysis.key_concepts) {
-                html += '<div><strong>Key Concepts:</strong><ul class="list-disc ml-5 mt-2">';
-                analysis.key_concepts.forEach(concept => {
-                    html += `<li>${concept}</li>`;
-                });
-                html += '</ul></div>';
-            }
-            
-            if (analysis.research_gaps) {
-                html += `<div><strong>Research Gaps:</strong> ${analysis.research_gaps}</div>`;
-            }
-            
-            html += '</div>';
-            
-            analysisContent.innerHTML = html;
-            results.classList.remove('hidden');
-            uploadForm.style.display = 'none';
-        }
-    </script>
+      analysisContent.innerHTML = html;
+      results.classList.remove("hidden");
+      uploadForm.style.display = "none";
+    }
+  </script>
 </body>
 </html>

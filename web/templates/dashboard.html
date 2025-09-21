@@ -13,6 +13,34 @@
             height: 300px;
             width: 100%;
         }
+
+.paper-item {
+    transition: all 0.3s ease;
+}
+
+.paper-item:hover {
+    background-color: #f9fafb;
+}
+
+.paper-item button {
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.paper-item:hover button {
+    opacity: 1;
+}
+
+/* Confirmation dialog styling */
+.delete-confirm {
+    animation: shake 0.3s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
     </style>
 </head>
 <body class="bg-gray-50">
@@ -49,31 +77,96 @@
                 <p class="text-sm text-gray-500">Conference submission</p>
             </div>
         </div>
-
+	<!-- Add this after the stats grid and before the main content grid -->
+	<div class="bg-gradient-to-r from-purple-500 to-blue-600 rounded-lg shadow-lg p-6 mb-8 text-white">
+    	<div class="flex items-center justify-between">
+        	<div>
+            	<h2 class="text-2xl font-bold mb-2">Systematic Literature Review</h2>
+            	<p class="text-purple-100 mb-4">AI-Assisted Coding Impact on Software Quality & Legal Compliance</p>
+            	<div class="flex items-center space-x-4 text-sm">
+                	<span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">Phase 1: Planning 25%</span>
+                	<span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">0 Papers Screened</span>
+            	</div>
+        	</div>
+        	<div class="text-right">
+            	<a href="/slr" class="inline-block bg-white text-purple-600 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+                	Continue SLR →
+            	</a>
+        	</div>
+    	</div>
+	</div>
+<!-- Gap-Filling Agent Panel -->
+<div class="mt-8 bg-white rounded-lg shadow p-6" style="margin-bottom:30px;">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">🤖 Research Gap Agent</h2>
+        <div class="flex items-center space-x-2">
+            <span id="agentStatus" class="text-sm px-2 py-1 rounded bg-gray-100 text-gray-600">Idle</span>
+        </div>
+    </div>
+    
+    <!-- Controls -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" style="margin-bottom: 30px;">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Check Interval (minutes)</label>
+            <input type="number" id="checkInterval" value="60" min="5" max="1440" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md">
+        </div>
+        <div class="flex items-end">
+            <button id="startAgent" onclick="startGapAgent()" 
+                    class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
+                ▶️ Start Agent
+            </button>
+        </div>
+        <div class="flex items-end">
+            <button id="stopAgent" onclick="stopGapAgent()" disabled
+                    class="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 disabled:bg-gray-300">
+                ⏹️ Stop Agent
+            </button>
+        </div>
+    </div>
+    
+    <div class="mb-4">
+        <button onclick="findGapsNow()" 
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            🔍 Find Papers Now
+        </button>
+    </div>
+    
+    <!-- Agent Activity Log -->
+    <div class="border-t pt-4">
+        <h3 class="font-semibold mb-2">Agent Activity Log</h3>
+        <div id="agentLog" class="space-y-2 max-h-64 overflow-y-auto text-sm">
+            <p class="text-gray-500">Agent not started yet.</p>
+        </div>
+    </div>
+</div>
         <!-- Main Content Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Recent Papers -->
-            <div class="lg:col-span-2 bg-white rounded-lg shadow p-6">
-                <h2 class="text-xl font-semibold mb-4">Recent Papers</h2>
-                <div class="space-y-4">
-                    <div class="border-l-4 border-blue-500 pl-4">
-                        <h4 class="font-semibold">Detecting LLM Hallucinations in Production</h4>
-                        <p class="text-sm text-gray-600">Status: In Progress • Theme: LLM Hallucinations</p>
-                        <p class="text-sm text-gray-500 mt-1">Last updated: 2 hours ago</p>
-                    </div>
-                    
-                    <div class="border-l-4 border-green-500 pl-4">
-                        <h4 class="font-semibold">AI-Assisted Code Review Workflows</h4>
-                        <p class="text-sm text-gray-600">Status: Review • Theme: Developer Workflows</p>
-                        <p class="text-sm text-gray-500 mt-1">Last updated: 1 day ago</p>
-                    </div>
-                    
-                    <div class="border-l-4 border-yellow-500 pl-4">
-                        <h4 class="font-semibold">Quality Metrics for AI-Generated Code</h4>
-                        <p class="text-sm text-gray-600">Status: Draft • Theme: QA</p>
-                        <p class="text-sm text-gray-500 mt-1">Last updated: 3 days ago</p>
-                    </div>
-                </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" style="margin-bottom:30px;">
+<!-- Recent Papers -->
+<div class="lg:col-span-2 bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Recent Papers</h2>
+    <div class="space-y-4">
+        {% for paper in papers %}
+        <div class="border-l-4 border-blue-500 pl-4 relative paper-item" data-paper-id="{{ paper.id }}">
+            <button onclick="deletePaper('{{ paper.id }}', '{{ paper.title|replace("'", "\\'") }}')" 
+                    class="absolute top-0 right-0 text-red-500 hover:text-red-700 p-2" 
+                    title="Delete paper">
+                🗑️
+            </button>
+            <h4 class="font-semibold pr-8">{{ paper.title }}</h4>
+            <p class="text-sm text-gray-600">Status: {{ paper.status }} • Theme: {{ paper.theme }}</p>
+            <p class="text-sm text-gray-500 mt-1">Last updated: {{ paper.last_updated }}</p>
+            <p class="text-sm text-gray-700 mt-2">{{ paper.summary }}</p>
+            <a href="{{ paper.pdf_link }}" target="_blank" class="text-blue-500 text-sm">📄 View PDF</a>
+        </div>
+        {% else %}
+        <p class="text-gray-500">No papers found.</p>
+        {% endfor %}
+    </div>
+    
+    <a href="#" class="mt-4 inline-block text-blue-600 hover:text-blue-800">View all papers →</a>
+</div>
+
                 
                 <a href="#" class="mt-4 inline-block text-blue-600 hover:text-blue-800">View all papers →</a>
             </div>
@@ -150,97 +243,303 @@
         </div>
     </div>
 
-    <script>
-        // Initialize progress chart with proper configuration
-        const ctx = document.getElementById('progressChart').getContext('2d');
-        const progressChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Papers Completed',
-                    data: [1, 2, 2, 4, 5, 7],
-                    borderColor: 'rgb(59, 130, 246)',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    tension: 0.1
-                }, {
-                    label: 'Papers Started',
-                    data: [2, 3, 5, 6, 8, 10],
-                    borderColor: 'rgb(34, 197, 94)',
-                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
+<!-- Add this script section before the closing </body> tag -->
+<script>
+// Gap-Filling Agent Variables
+let agentInterval = null;
+let agentRunning = false;
+
+// Gap-Filling Agent Functions
+function updateAgentStatus(status, color = 'gray') {
+    const statusEl = document.getElementById('agentStatus');
+    statusEl.textContent = status;
+    statusEl.className = `text-sm px-2 py-1 rounded bg-${color}-100 text-${color}-600`;
+}
+
+function addAgentLog(message) {
+    const logEl = document.getElementById('agentLog');
+    const timestamp = new Date().toLocaleTimeString();
+    const entry = document.createElement('div');
+    entry.className = 'flex items-start space-x-2';
+    entry.innerHTML = `
+        <span class="text-gray-400">[${timestamp}]</span>
+        <span>${message}</span>
+    `;
+    
+    // Add to top of log
+    if (logEl.children.length === 1 && logEl.children[0].textContent.includes('not started')) {
+        logEl.innerHTML = '';
+    }
+    logEl.insertBefore(entry, logEl.firstChild);
+    
+    // Keep only last 50 entries
+    while (logEl.children.length > 50) {
+        logEl.removeChild(logEl.lastChild);
+    }
+}
+
+async function findGapsNow() {
+    updateAgentStatus('Searching...', 'blue');
+    addAgentLog('🔍 Starting gap analysis for all papers...');
+
+    try {
+        const response = await fetch('/api/analyze-all-gaps', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
         });
 
-        // Search functions
-        function searchLiterature() {
-            document.getElementById('searchModal').classList.remove('hidden');
-        }
-        
-        function closeSearch() {
-            document.getElementById('searchModal').classList.add('hidden');
-        }
-        
-        async function performSearch() {
-            const query = document.getElementById('searchQuery').value;
-            const resultsDiv = document.getElementById('searchResults');
-            resultsDiv.innerHTML = '<p class="text-gray-500">Searching...</p>';
-            
-            try {
-                const response = await fetch('/search', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({query: query})
-                });
+        const result = await response.json();
+
+        if (result.success) {
+            addAgentLog(`✅ Analyzed ${result.papers_analyzed} papers, added ${result.papers_added} new papers`);
+
+            result.findings.forEach(finding => {
+                if (finding.paper_added) {
+                    addAgentLog(`📄 <strong>${finding.title}</strong>: Added "${finding.paper_added}" to read`);
+                } else {
+                    addAgentLog(`📄 <strong>${finding.title}</strong>: ${finding.summary}`);
+                }
+            });
+
+            if (result.papers_added > 0) {
+                addAgentLog(`🎉 Check your Notion for ${result.papers_added} new paper(s) marked "To Read"`);
                 
-                const results = await response.json();
-                displaySearchResults(results);
-            } catch (error) {
-                resultsDiv.innerHTML = '<p class="text-red-500">Search failed. Please try again.</p>';
+                // Optionally refresh the page to show new papers
+                setTimeout(() => {
+                    if (confirm('New papers added! Refresh to see them?')) {
+                        location.reload();
+                    }
+                }, 1000);
             }
+
+            updateAgentStatus('Complete', 'green');
+            setTimeout(() => updateAgentStatus('Idle', 'gray'), 3000);
+        } else {
+            addAgentLog('❌ Error: ' + result.error);
+            updateAgentStatus('Error', 'red');
         }
+    } catch (error) {
+        addAgentLog('❌ Failed to analyze gaps: ' + error.message);
+        updateAgentStatus('Error', 'red');
+    }
+}
+
+function startGapAgent() {
+    const interval = parseInt(document.getElementById('checkInterval').value);
+    
+    if (interval < 5) {
+        alert('Minimum interval is 5 minutes');
+        return;
+    }
+    
+    agentRunning = true;
+    document.getElementById('startAgent').disabled = true;
+    document.getElementById('stopAgent').disabled = false;
+    document.getElementById('checkInterval').disabled = true;
+    
+    updateAgentStatus('Running', 'green');
+    addAgentLog(`🚀 Agent started - checking every ${interval} minutes`);
+    
+    // Save interval to localStorage
+    localStorage.setItem('agentInterval', interval);
+    
+    // Run immediately
+    findGapsNow();
+    
+    // Set interval (convert minutes to milliseconds)
+    agentInterval = setInterval(() => {
+        if (agentRunning) {
+            addAgentLog(`⏰ Running scheduled gap analysis...`);
+            findGapsNow();
+        }
+    }, interval * 60 * 1000);
+}
+
+function stopGapAgent() {
+    agentRunning = false;
+    
+    if (agentInterval) {
+        clearInterval(agentInterval);
+        agentInterval = null;
+    }
+    
+    document.getElementById('startAgent').disabled = false;
+    document.getElementById('stopAgent').disabled = true;
+    document.getElementById('checkInterval').disabled = false;
+    
+    updateAgentStatus('Stopped', 'red');
+    addAgentLog('⏹️ Agent stopped');
+}
+
+// Delete Paper Function
+async function deletePaper(paperId, paperTitle) {
+    if (!confirm(`Are you sure you want to delete "${paperTitle}"?`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/delete-paper/${paperId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         
-        function displaySearchResults(results) {
-            const resultsDiv = document.getElementById('searchResults');
-            let html = '';
+        const result = await response.json();
+        
+        if (result.success) {
+            // Remove the paper from the DOM
+            const paperElement = document.querySelector(`[data-paper-id="${paperId}"]`);
+            if (paperElement) {
+                paperElement.style.transition = 'opacity 0.3s';
+                paperElement.style.opacity = '0';
+                setTimeout(() => {
+                    paperElement.remove();
+                    
+                    // Check if no papers left
+                    const papersList = paperElement.parentElement;
+                    if (papersList && papersList.children.length === 0) {
+                        papersList.innerHTML = '<p class="text-gray-500">No papers found.</p>';
+                    }
+                }, 300);
+            }
             
-            for (const [source, data] of Object.entries(results)) {
-                if (data.status === 'success' && data.papers.length > 0) {
-                    html += `<div class="mb-4">
-                        <h4 class="font-semibold text-lg mb-2">${source}</h4>
-                        <div class="space-y-2">`;
-                    
-                    data.papers.forEach(paper => {
-                        html += `
-                            <div class="border p-3 rounded hover:bg-gray-50">
-                                <h5 class="font-medium">${paper.title}</h5>
-                                <p class="text-sm text-gray-600">${paper.authors.join(', ')} (${paper.year})</p>
-                                <p class="text-sm mt-1">${paper.abstract.substring(0, 150)}...</p>
-                                <a href="${paper.url}" target="_blank" class="text-blue-500 text-sm">View Paper</a>
-                            </div>`;
-                    });
-                    
-                    html += '</div></div>';
+            // Log the deletion
+            addAgentLog(`🗑️ Deleted paper: "${paperTitle}"`);
+            
+            // Show notification
+            showNotification(`Deleted: ${paperTitle}`, 'success');
+            
+        } else {
+            alert('Failed to delete paper: ' + (result.error || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Delete error:', error);
+        alert('Failed to delete paper. Please try again.');
+    }
+}
+
+// Notification Function
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white ${
+        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    } shadow-lg transition-opacity duration-300 z-50`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Search Functions
+function searchLiterature() {
+    document.getElementById('searchModal').classList.remove('hidden');
+}
+
+function closeSearch() {
+    document.getElementById('searchModal').classList.add('hidden');
+}
+
+async function performSearch() {
+    const query = document.getElementById('searchQuery').value;
+    const resultsDiv = document.getElementById('searchResults');
+    resultsDiv.innerHTML = '<p class="text-gray-500">Searching...</p>';
+    
+    try {
+        const response = await fetch('/search', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({query: query})
+        });
+        
+        const results = await response.json();
+        displaySearchResults(results);
+    } catch (error) {
+        resultsDiv.innerHTML = '<p class="text-red-500">Search failed. Please try again.</p>';
+    }
+}
+
+function displaySearchResults(results) {
+    const resultsDiv = document.getElementById('searchResults');
+    let html = '';
+    
+    for (const [source, data] of Object.entries(results)) {
+        if (data.status === 'success' && data.papers.length > 0) {
+            html += `<div class="mb-4">
+                <h4 class="font-semibold text-lg mb-2">${source}</h4>
+                <div class="space-y-2">`;
+            
+            data.papers.forEach(paper => {
+                html += `
+                    <div class="border p-3 rounded hover:bg-gray-50">
+                        <h5 class="font-medium">${paper.title}</h5>
+                        <p class="text-sm text-gray-600">${paper.authors.join(', ')} (${paper.year})</p>
+                        <p class="text-sm mt-1">${paper.abstract.substring(0, 150)}...</p>
+                        <a href="${paper.url}" target="_blank" class="text-blue-500 text-sm">View Paper</a>
+                    </div>`;
+            });
+            
+            html += '</div></div>';
+        }
+    }
+    
+    resultsDiv.innerHTML = html || '<p class="text-gray-500">No results found.</p>';
+}
+
+// Initialize Progress Chart
+document.addEventListener('DOMContentLoaded', function() {
+    // Progress Chart
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    const progressChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Papers Completed',
+                data: [1, 2, 2, 4, 5, 7],
+                borderColor: 'rgb(59, 130, 246)',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                tension: 0.1
+            }, {
+                label: 'Papers Started',
+                data: [2, 3, 5, 6, 8, 10],
+                borderColor: 'rgb(34, 197, 94)',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-            
-            resultsDiv.innerHTML = html || '<p class="text-gray-500">No results found.</p>';
         }
-    </script>
+    });
+    
+    // Load saved interval
+    const savedInterval = localStorage.getItem('agentInterval');
+    if (savedInterval) {
+        document.getElementById('checkInterval').value = savedInterval;
+    }
+});
+
+// Handle Enter key in search modal
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !document.getElementById('searchModal').classList.contains('hidden')) {
+        performSearch();
+    }
+});
+</script>
 </body>
 </html>
